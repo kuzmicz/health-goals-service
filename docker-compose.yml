@@ -1,0 +1,25 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: health-goals-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  app:
+    build: .
+    container_name: health-goals-api
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      - mongo
+    command: ["npm", "run", "dev"]
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
